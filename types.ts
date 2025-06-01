@@ -1,10 +1,9 @@
-
-import React from 'react';
+// import React from 'react'; // No longer strictly needed with the change below
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      'gradio-app': React.HTMLAttributes<HTMLElement> & {
+      'gradio-app': JSX.IntrinsicElements['div'] & { // Changed from React.HTMLAttributes<HTMLElement>
         src?: string;
         
         // Other potential Gradio-specific attributes can be added here if needed, e.g.:

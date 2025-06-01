@@ -9,40 +9,51 @@ const App: React.FC = () => {
   const gradioAppSrc = "https://resembleai-chatterbox.hf.space";
 
   useEffect(() => {
-    // Attempt to hide the H1 element using the user-provided snippet.
-    // This code is executed after the component mounts.
-    // A timeout is used to give the <gradio-app> a brief moment to load.
-
     const attemptHideTitle = () => {
       try {
-        // User's provided line:
-        const headingElement = document.querySelectorAll('gradio-app h1')[0] as HTMLElement | undefined;
+        let headingElement = document.querySelector('gradio-app h1') as HTMLElement | null;
 
         if (headingElement) {
+          console.log("H1 element found using 'gradio-app h1' selector (likely in light DOM or directly accessible). Attempting to hide.");
           headingElement.style.display = "none";
-          console.log("Attempted to hide H1 element targeted by 'gradio-app h1'.");
         } else {
-          console.warn("H1 element targeted by 'gradio-app h1' not found. It might not exist, might be in a Shadow DOM, or within a cross-origin iframe.");
+          // If the general selector didn't find it, specifically check the shadow DOM of the <gradio-app> element
+          console.log("H1 element not found with 'gradio-app h1'. Attempting to check <gradio-app>'s shadow DOM.");
+          const gradioAppNode = document.querySelector('gradio-app');
+          if (gradioAppNode && gradioAppNode.shadowRoot) {
+            console.log("<gradio-app> has a shadowRoot. Querying for H1 within it.");
+            headingElement = gradioAppNode.shadowRoot.querySelector('h1') as HTMLElement | null;
+            if (headingElement) {
+              console.log("H1 element found in <gradio-app>'s shadow DOM. Attempting to hide.");
+              headingElement.style.display = "none";
+            } else {
+              console.log("H1 element not found in <gradio-app>'s shadow DOM.");
+            }
+          } else {
+            console.log("<gradio-app> element not found or it does not have a shadowRoot.");
+          }
+        }
+
+        if (headingElement && headingElement.style.display === "none") {
+          console.log("Successfully hid the H1 element associated with <gradio-app>.");
+        } else if (!headingElement) {
+          console.warn(
+            "Failed to find the H1 element to hide within <gradio-app> (checked light DOM and shadow DOM if available). " +
+            "This could be due to: \n" +
+            "1. The H1 element does not exist or uses a different tag/selector. \n" +
+            "2. Timing: The element might not have been rendered yet. \n" +
+            "3. Cross-Origin Iframe: If <gradio-app> loads its content from a different origin (e.g., hf.space) into an iframe, JavaScript from this page cannot access or modify its content due to the Same-Origin Policy. \n" +
+            "4. Closed Shadow DOM: The <gradio-app> might use a 'closed' shadow DOM, which is not accessible from outside."
+          );
         }
       } catch (error) {
-        console.error("Error attempting to hide H1 element:", error);
+        console.error("Error encountered while attempting to hide H1 element:", error);
       }
     };
 
-    // IMPORTANT CAVEATS:
-    // 1. Same-Origin Policy: If the <gradio-app> loads its content (src)
-    //    into an iframe from a different origin (like hf.space), this script
-    //    CANNOT access or modify elements *inside* that iframe.
-    //    This is a fundamental browser security feature.
-    // 2. Shadow DOM: If <gradio-app> uses a Shadow DOM for its internal
-    //    structure, document.querySelectorAll() from the parent page might not
-    //    pierce it to find the H1.
-    // 3. Timing: The H1 might not be present in the DOM when this script runs,
-    //    even with a timeout. This approach is fragile.
-    //
-    // If the H1 is part of the cross-origin iframe content, this will not work.
-    // Changes would need to be made in the Gradio app's own source code.
-    const timerId = setTimeout(attemptHideTitle, 2000); // 2-second delay, adjust if necessary
+    // A timeout is used to give the <gradio-app> a moment to load.
+    // For more complex scenarios, a MutationObserver might be more robust for timing.
+    const timerId = setTimeout(attemptHideTitle, 2000); // 2-second delay
 
     return () => clearTimeout(timerId); // Cleanup the timeout if the component unmounts
   }, []); // Empty dependency array ensures this effect runs only once after initial render
@@ -64,18 +75,11 @@ const App: React.FC = () => {
         <div className="bg-slate-700/30 backdrop-blur-lg shadow-2xl rounded-xl overflow-hidden w-full ring-1 ring-slate-700">
           {/* 
             The <gradio-app> element renders the Gradio interface.
-            The Gradio JS script (loaded in index.html) defines this custom element.
-            TypeScript now recognizes 'gradio-app' due to the global declaration in types.ts.
-            It typically handles its own loading state and responsiveness.
-            Ensure the `src` attribute points to a valid Gradio app URL.
-
-            Note on hiding internal elements:
-            Directly hiding specific elements (like a "Chatterbox TS demo" heading) 
-            *within* the Gradio application (loaded in the iframe below) from this 
-            parent React application is generally not possible due to browser 
-            Same-Origin Policy if the content is cross-origin. 
-            The useEffect hook above attempts this based on user request, but it is
-            subject to these browser security restrictions and timing issues.
+            The useEffect hook attempts to hide an H1 element that might be rendered
+            by or within this <gradio-app> component. This attempt is subject to
+            browser security policies (Same-Origin Policy) if the Gradio content
+            is iframed from a different domain, and also depends on the internal
+            structure of the <gradio-app> (e.g., use of Shadow DOM).
           */}
           <gradio-app src={gradioAppSrc}></gradio-app>
         </div>
