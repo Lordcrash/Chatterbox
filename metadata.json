@@ -1,5 +1,5 @@
 {
-  "name": "Interactive AI Chat with Gradio",
-  "description": "A React application that embeds a Gradio AI chat interface, allowing users to interact with the Resemble AI Chatterbox.",
+  "name": "SynthMe Buddy - Interactive Voice AI Demo",
+  "description": "SynthMe Buddy: Your go-to app for generating exceptionally high-quality speech from text. Features advanced AI that styles voice output using reference audio for unparalleled realism and expressiveness. Experience the future of voice synthesis.",
   "requestFramePermissions": []
 }

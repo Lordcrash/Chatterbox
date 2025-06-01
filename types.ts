@@ -1,18 +1,17 @@
+
 import React from 'react';
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      'gradio-app': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement> & {
-          src?: string;
-          // Other potential Gradio-specific attributes can be added here if needed, e.g.:
-          // theme_mode?: "light" | "dark";
-          // initial_height?: string; // e.g., "500px"
-          // For this app, only 'src' is explicitly used from the original code.
-        },
-        HTMLElement
-      >;
+      'gradio-app': React.HTMLAttributes<HTMLElement> & {
+        src?: string;
+        
+        // Other potential Gradio-specific attributes can be added here if needed, e.g.:
+        // theme_mode?: "light" | "dark";
+        // initial_height?: string; // e.g., "500px"
+        // For this app, only 'src' is explicitly used from the original code.
+      };
     }
   }
 }
@@ -24,3 +23,5 @@ declare global {
 //   name: string;
 //   email?: string;
 // }
+
+export {}; // Ensures this file is treated as a module
