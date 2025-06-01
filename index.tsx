@@ -1,10 +1,7 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-// Import types.ts to ensure TypeScript picks up global declarations,
-// though typically not needed if tsconfig includes all .ts files.
-import './types';
-
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

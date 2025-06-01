@@ -1,5 +1,5 @@
 {
-  "name": "Interactive AI Voice Chat with Gradio",
-  "description": "A React application that embeds a Gradio AI voice chat application, styled with Tailwind CSS. It demonstrates using Gradio web components within a React frontend.",
+  "name": "Interactive AI Chat with Gradio",
+  "description": "A React application that embeds a Gradio AI chat interface, allowing users to interact with the Resemble AI Chatterbox.",
   "requestFramePermissions": []
 }

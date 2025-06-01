@@ -5,10 +5,11 @@ declare global {
     interface IntrinsicElements {
       'gradio-app': React.DetailedHTMLProps<
         React.HTMLAttributes<HTMLElement> & {
-          src?: string; // Standard Gradio prop for URL source
-          space?: string; // Alternative for Hugging Face Spaces
-          theme_mode?: 'light' | 'dark'; // Optional theme mode
-          // Add other Gradio props if needed
+          src?: string;
+          // Other potential Gradio-specific attributes can be added here if needed, e.g.:
+          // theme_mode?: "light" | "dark";
+          // initial_height?: string; // e.g., "500px"
+          // For this app, only 'src' is explicitly used from the original code.
         },
         HTMLElement
       >;
@@ -16,6 +17,10 @@ declare global {
   }
 }
 
-// This export ensures the file is treated as a module.
-// The import of 'react' also achieves this.
-export {};
+// This file can be expanded with other global types or interfaces as the application grows.
+// For example:
+// export interface UserProfile {
+//   id: string;
+//   name: string;
+//   email?: string;
+// }
